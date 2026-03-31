@@ -1,7 +1,17 @@
 import express from "express";
 import morgan from "morgan";
 import path from "path";
-import taskRoutes from "./tasks/taskRoute.js";
+
+import { TaskRepo } from "./src/repositories/taskRepo.js";
+import { TaskService } from "./src/services/taskService.js";
+import { TaskController } from "./src/controllers/taskController.js";
+
+// Dependency injection composition root
+const TASKS_PATH = path.join(import.meta.dirname, "data/tasks.json");
+
+const taskRepo = new TaskRepo(TASKS_PATH);
+const taskService = new TaskService(taskRepo);
+const taskController = new TaskController(taskService);
 
 const app = express();
 
@@ -11,17 +21,15 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.set("view engine", "ejs");
-app.set("views", path.join(import.meta.dirname, "views"));
+app.set("views", path.join(import.meta.dirname, "src/views"));
 
-app.get("/", (req, res) => res.render("index", { page: "home" }));
+app.get("/", taskController.getDashboard);
 
-app.use("/tasks", taskRoutes);
-
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).sendFile(path.join(import.meta.dirname, "public/404.html"));
 });
 
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   console.error(err);
   res
     .status(err.status || 500)

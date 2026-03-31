@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tasks</title>
+    <link rel="stylesheet" href="/css/index.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Dashboard</h1>
+
+      <% if (tasks.length === 0) { %>
+        <p>No tasks yet.</p>
+      <% } else { %>
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% tasks.forEach(task => { %>
+              <tr class="<%= task.completed ? 'row-done' : '' %>">
+                <td><%= task.title %></td>
+                <td><%= task.date %></td>
+                <td>
+                  <span class="badge badge-<%= task.priority %>"><%= task.priority %></span>
+                </td>
+                <td><%= task.completed ? 'Done' : 'Pending' %></td>
+                <td>
+                  <div class="actions">
+                    <a href="/tasks/<%= task.id %>/edit">Edit</a>
+                    <form method="POST" action="/tasks/<%= task.id %>?_method=DELETE">
+                      <button type="submit">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+
+      <a href="/tasks/new" class="btn">+ New Task</a>
+    </main>
+
+    <%- include('partials/footer') %>
+  </body>
+</html>

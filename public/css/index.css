@@ -132,3 +132,128 @@ footer {
 .footer-link:hover {
   text-decoration: underline;
 }
+
+/* Task table */
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.task-table th,
+.task-table td {
+  text-align: left;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.task-table th {
+  font-weight: 700;
+  color: var(--text);
+  opacity: 0.6;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.task-table tr:last-child td {
+  border-bottom: none;
+}
+
+.row-done td {
+  opacity: 0.45;
+  text-decoration: line-through;
+  text-decoration-color: var(--border);
+}
+
+.row-done td:last-child {
+  text-decoration: none;
+}
+
+/* Priority badges */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-high {
+  background: #3f0d0d;
+  color: #ff6b6b;
+}
+.badge-medium {
+  background: #2e2000;
+  color: #f5a623;
+}
+.badge-low {
+  background: #0d1f0d;
+  color: #6bcb77;
+}
+
+@media (prefers-color-scheme: light) {
+  .badge-high {
+    background: #ffe0e0;
+    color: #c0392b;
+  }
+  .badge-medium {
+    background: #fff3cd;
+    color: #856404;
+  }
+  .badge-low {
+    background: #d4edda;
+    color: #155724;
+  }
+}
+
+/* Actions cell */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.actions form {
+  display: contents;
+}
+
+.actions a,
+.actions button {
+  font-family: "Geist", sans-serif;
+  font-size: 0.85rem;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.actions a:hover,
+.actions button:hover {
+  opacity: 0.6;
+}
+
+/* New task button */
+.btn {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
