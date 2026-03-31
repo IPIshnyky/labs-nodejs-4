@@ -1,7 +1,7 @@
 {
   "functions": {
     "app.js": {
-      "includeFiles": "{public,views,data,node_modules/geist/dist/fonts}/**"
+      "includeFiles": "{public,src/views,data,node_modules/geist/dist/fonts}/**"
     }
   },
   "rewrites": [
