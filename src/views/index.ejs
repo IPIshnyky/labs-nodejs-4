@@ -9,16 +9,25 @@
     <main>
       <h1>Dashboard</h1>
 
+      <% 
+        const getSortLink = (label, field) => {
+          const isCurrent = currentSort === field;
+          const nextOrder = isCurrent && currentOrder === 'asc' ? 'desc' : 'asc';
+          const icon = isCurrent ? (currentOrder === 'asc' ? '▲' : '▼') : '↕';
+          return `<a href="/?sort=${field}&order=${nextOrder}" class="sort-link">${label} ${icon}</a>`;
+        }
+      %>
+
       <% if (tasks.length === 0) { %>
         <p>No tasks yet.</p>
       <% } else { %>
         <table class="task-table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Date</th>
-              <th>Priority</th>
-              <th>Status</th>
+              <th><%- getSortLink('Title', 'title') %></th>
+              <th><%- getSortLink('Date', 'date') %></th>
+              <th><%- getSortLink('Priority', 'priority') %></th>
+              <th><%- getSortLink('Status', 'status') %></th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -46,6 +55,9 @@
       <% } %>
 
       <a href="/tasks/new" class="btn">+ New Task</a>
+      <% if (currentSort) { %>
+        <a href="/" class="btn">Reset sorting</a>
+      <% } %>
     </main>
 
     <%- include('partials/footer') %>

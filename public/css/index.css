@@ -257,3 +257,18 @@ footer {
   border-color: var(--accent);
   color: var(--accent);
 }
+
+/*Sort styles*/
+.sort-link {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+  transition:
+    color 0.2s,
+    transform 0.1s;
+}
+
+.sort-link:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
