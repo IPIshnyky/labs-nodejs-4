@@ -9,6 +9,19 @@ export class TaskService {
     return this.#repo.getAll();
   }
 
+  async flipCompletionStatus(id) {
+    const tasks = await this.#repo.getAll(); //
+    const task = tasks.find((t) => t.id === id);
+
+    if (!task) {
+      const err = new Error("Task not found");
+      err.status = 404;
+      throw err;
+    }
+
+    return await this.#repo.update(id, { completed: !task.completed });
+  }
+
   async createTask(dto) {
     const title = typeof dto?.title === "string" ? dto.title.trim() : "";
     const date = typeof dto?.date === "string" ? dto.date : "";

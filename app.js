@@ -28,6 +28,7 @@ app.get("/", taskController.getDashboard);
 
 app.get("/tasks/new", taskController.renderCreateForm);
 app.post("/tasks", taskController.submitNewTask);
+app.post("/tasks/:id/toggle", taskController.toggleTaskStatus);
 
 app.use((_req, res) => {
   res.status(404).sendFile(path.join(import.meta.dirname, "public/404.html"));

@@ -43,4 +43,13 @@ export class TaskController {
       next(error);
     }
   };
+
+  toggleTaskStatus = async (req, res, next) => {
+    try {
+      await this.#service.flipCompletionStatus(req.params.id);
+      res.redirect(303, "/");
+    } catch (error) {
+      next(error);
+    }
+  };
 }

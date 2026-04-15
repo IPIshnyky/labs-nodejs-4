@@ -26,4 +26,16 @@ export class TaskRepo {
       })
       .then(() => task);
   }
+
+  async update(id, updates) {
+    const tasks = await this.getAll();
+    const index = tasks.findIndex((t) => t.id === id);
+
+    if (index === -1) return null;
+
+    tasks[index] = { ...tasks[index], ...updates };
+
+    await writeFile(this.#tasksPath, `${JSON.stringify(tasks, null, 2)}\n`);
+    return tasks[index];
+  }
 }
