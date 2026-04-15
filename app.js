@@ -18,12 +18,16 @@ const app = express();
 app.use("/fonts/geist", express.static("node_modules/geist/dist/fonts"));
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(import.meta.dirname, "src/views"));
 
 app.get("/", taskController.getDashboard);
+
+app.get("/tasks/new", taskController.renderCreateForm);
+app.post("/tasks", taskController.submitNewTask);
 
 app.use((_req, res) => {
   res.status(404).sendFile(path.join(import.meta.dirname, "public/404.html"));
