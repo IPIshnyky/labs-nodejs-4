@@ -42,7 +42,7 @@
                 <td><%= task.completed ? 'Done' : 'Pending' %></td>
                 <td>
                   <div class="actions">
-                    <form method="POST" aaction="/tasks/<%= task.id %>/toggle" style="display:inline;">
+                    <form method="POST" action="/tasks/<%= task.id %>/toggle" style="display:inline;">
                       <button type ="submit">
                         <%= task.completed ? 'Undo' : 'Complete' %>
                       </button>
@@ -51,7 +51,7 @@
                       <form method="POST" action="/tasks/<%= task.id %>?_method=DELETE">
                         <button type="submit">Delete</button>
                       </form>
-                    </div>
+                  </div>
                 </td>
               </tr>
             <% }) %>
