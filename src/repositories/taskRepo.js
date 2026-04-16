@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "fs/promises";
+import { readFileSync, writeFileSync } from "fs";
 
 export class TaskRepo {
   #tasksPath;
@@ -37,5 +38,16 @@ export class TaskRepo {
 
     await writeFile(this.#tasksPath, `${JSON.stringify(tasks, null, 2)}\n`);
     return tasks[index];
+  }
+
+  delete(id) {
+    const raw = readFileSync(this.#tasksPath, "utf-8");
+    const tasks = JSON.parse(raw);
+    const filtered = tasks.filter((t) => t.id !== id);
+
+    if (filtered.length === tasks.length) return null;
+
+    writeFileSync(this.#tasksPath, `${JSON.stringify(filtered, null, 2)}\n`);
+    return id;
   }
 }

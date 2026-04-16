@@ -65,6 +65,18 @@ export class TaskService {
     return newTask;
   }
 
+  removeTask(id) {
+    const result = this.#repo.delete(id);
+
+    if (result === null) {
+      const err = new Error("Task not found");
+      err.status = 404;
+      throw err;
+    }
+
+    return result;
+  }
+
   sortTasks(tasks, criteria, order = "asc") {
     const sortedTasks = [...tasks];
     const modifier = order === "desc" ? -1 : 1;

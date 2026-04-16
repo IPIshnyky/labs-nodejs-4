@@ -52,4 +52,13 @@ export class TaskController {
       next(error);
     }
   };
+
+  deleteTask = (req, res, next) => {
+    try {
+      this.#service.removeTask(req.params.id);
+      res.redirect(303, "/");
+    } catch (error) {
+      next(error);
+    }
+  };
 }
