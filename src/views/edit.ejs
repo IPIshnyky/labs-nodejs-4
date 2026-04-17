@@ -9,7 +9,7 @@
     <%- include('partials/nav') %>
     <main>
       <h1>Edit Task</h1>
-      <form action="/tasks/<%= task.id %>?_method=PUT" method="POST">
+      <form action="/tasks/<%= task.id %>/update" method="POST">
         <div>
           <label for="title">Title</label>
           <input type="text" id="title" name="title" value="<%= task.title %>" required />

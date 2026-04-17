@@ -28,6 +28,8 @@ app.get("/", taskController.getDashboard);
 
 app.get("/tasks/new", taskController.renderCreateForm);
 app.post("/tasks", taskController.submitNewTask);
+app.get("/tasks/:id/edit", taskController.renderEditForm);
+app.post("/tasks/:id/update", taskController.submitUpdate);
 app.post("/tasks/:id/toggle", taskController.toggleTaskStatus);
 app.post("/tasks/:id/delete", taskController.deleteTask);
 
