@@ -248,6 +248,9 @@ footer {
   font-weight: 600;
   color: var(--text);
   opacity: 0.9;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .form-input,
@@ -303,4 +306,52 @@ input[type="date"]:focus {
 /* Some browsers render native dropdowns; reinforce text color when opened */
 select::-ms-value {
   color: var(--text);
+}
+
+/* Themed checkbox styling to match inputs and buttons */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  position: relative;
+  transition:
+    border-color 0.12s,
+    background-color 0.12s,
+    box-shadow 0.12s;
+}
+
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 6px var(--accent-glow);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--bg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Keep checkbox label alignment consistent */
+.form-label input[type="checkbox"] {
+  margin-right: 0.5rem;
 }
