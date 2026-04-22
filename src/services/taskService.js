@@ -65,6 +65,60 @@ export class TaskService {
     return newTask;
   }
 
+  async getTaskById(id) {
+    const tasks = await this.#repo.getAll();
+    const task = tasks.find((t) => t.id === id);
+
+    if (!task) {
+      const err = new Error("Task not found");
+      err.status = 404;
+      throw err;
+    }
+
+    return task;
+  }
+
+  async updateTaskData(id, dto) {
+    const title = typeof dto?.title === "string" ? dto.title.trim() : "";
+    const date = typeof dto?.date === "string" ? dto.date : "";
+    const priority = typeof dto?.priority === "string" ? dto.priority : "";
+
+    if (!title) {
+      const err = new Error("Title is required");
+      err.status = 400;
+      throw err;
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date))) {
+      const err = new Error("Date must be in YYYY-MM-DD format");
+      err.status = 400;
+      throw err;
+    }
+
+    if (!["low", "medium", "high"].includes(priority)) {
+      const err = new Error("Priority must be low, medium, or high");
+      err.status = 400;
+      throw err;
+    }
+
+    const completed = dto?.completed === "true" || dto?.completed === "on";
+
+    const updated = await this.#repo.update(id, {
+      title,
+      date,
+      priority,
+      completed,
+    });
+
+    if (!updated) {
+      const err = new Error("Task not found");
+      err.status = 404;
+      throw err;
+    }
+
+    return updated;
+  }
+
   removeTask(id) {
     const result = this.#repo.delete(id);
 

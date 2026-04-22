@@ -44,6 +44,30 @@ export class TaskController {
     }
   };
 
+  renderEditForm = async (req, res, next) => {
+    try {
+      const task = await this.#service.getTaskById(req.params.id);
+      res.render("edit", { page: "edit", task });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  submitUpdate = async (req, res, next) => {
+    try {
+      await this.#service.updateTaskData(req.params.id, {
+        title: req.body.title,
+        date: req.body.date,
+        priority: req.body.priority,
+        completed: req.body.completed,
+      });
+
+      res.redirect(303, "/");
+    } catch (error) {
+      next(error);
+    }
+  };
+
   toggleTaskStatus = async (req, res, next) => {
     try {
       await this.#service.flipCompletionStatus(req.params.id);
