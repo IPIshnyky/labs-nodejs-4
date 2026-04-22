@@ -8,7 +8,12 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "prepare": "husky",
+    "migrate:up": "node scripts/migrate.js up",
+    "migrate:down": "node scripts/migrate.js down",
+    "migrate:refresh": "node scripts/migrate.js refresh",
+    "seed": "node scripts/seed.js",
+    "ci": "npm run migrate:up && npm run seed && npm test"
   },
   "repository": {
     "type": "git",
