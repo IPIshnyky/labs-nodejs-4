@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kpi-dutov-ivan-andriyovych/labs-nodejs-2.git"
+    "url": "git+https://github.com/kpi-dutov-ivan-andriyovych/labs-nodejs-3.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kpi-dutov-ivan-andriyovych/labs-nodejs-2/issues"
+    "url": "https://github.com/kpi-dutov-ivan-andriyovych/labs-nodejs-3/issues"
   },
-  "homepage": "https://github.com/kpi-dutov-ivan-andriyovych/labs-nodejs-2#readme",
+  "homepage": "https://github.com/kpi-dutov-ivan-andriyovych/labs-nodejs-3#readme",
   "dependencies": {
     "ejs": "^4.0.1",
     "express": "^5.2.1",

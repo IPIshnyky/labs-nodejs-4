@@ -45,6 +45,43 @@ app.use((err, _req, res, _next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+const shutdown = (signal) => {
+  return (err) => {
+    if (err) {
+      console.error(`${signal} received with error:`, err);
+    } else {
+      console.log(`${signal} received, shutting down gracefully.`);
+    }
+
+    // Stop accepting new connections
+    server.close((closeErr) => {
+      if (closeErr) {
+        console.error("Error during server close", closeErr);
+        process.exit(1);
+      }
+      console.log("Closed remaining connections, exiting.");
+      process.exit(0);
+    });
+
+    // Force exit if shutdown takes too long
+    setTimeout(() => {
+      console.warn("Forcing shutdown due to timeout.");
+      process.exit(1);
+    }, 10000).unref();
+  };
+};
+
+process.on("SIGTERM", shutdown("SIGTERM"));
+process.on("SIGINT", shutdown("SIGINT"));
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+  shutdown("uncaughtException")(err);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled Rejection:", reason);
+  shutdown("unhandledRejection")(reason);
 });
