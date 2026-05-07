@@ -73,37 +73,36 @@ export class TaskRepo {
   }
 
   async update(id, updates) {
+    const fields = [];
+    const values = [];
+    let paramCount = 1;
+
+    if (updates.title !== undefined) {
+      fields.push(`title = $${paramCount++}`);
+      values.push(updates.title);
+    }
+
+    if (updates.date !== undefined) {
+      fields.push(`due_date = $${paramCount++}`);
+      values.push(updates.date || null);
+    }
+
+    if (updates.priority !== undefined) {
+      fields.push(`priority = $${paramCount++}`);
+      values.push(this.#priorityToInt(updates.priority));
+    }
+
+    if (updates.completed !== undefined) {
+      fields.push(`is_done = $${paramCount++}`);
+      values.push(updates.completed);
+    }
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
 
-      const fields = [];
-      const values = [];
-      let paramCount = 1;
-
-      if (updates.title !== undefined) {
-        fields.push(`title = $${paramCount++}`);
-        values.push(updates.title);
-      }
-
-      if (updates.date !== undefined) {
-        fields.push(`due_date = $${paramCount++}`);
-        values.push(updates.date || null);
-      }
-
-      if (updates.priority !== undefined) {
-        fields.push(`priority = $${paramCount++}`);
-        values.push(this.#priorityToInt(updates.priority));
-      }
-
-      if (updates.completed !== undefined) {
-        fields.push(`is_done = $${paramCount++}`);
-        values.push(updates.completed);
-      }
-
       if (fields.length === 0) {
         await client.query("ROLLBACK");
-        const existing = await pool.query(
+        const existing = await client.query(
           "SELECT id, title, due_date, priority, is_done, created_at FROM tasks WHERE id = $1",
           [id],
         );
