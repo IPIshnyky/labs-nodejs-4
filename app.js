@@ -7,9 +7,7 @@ import { TaskService } from "./src/services/taskService.js";
 import { TaskController } from "./src/controllers/taskController.js";
 
 // Dependency injection composition root
-const TASKS_PATH = path.join(import.meta.dirname, "data/tasks.json");
-
-const taskRepo = new TaskRepo(TASKS_PATH);
+const taskRepo = new TaskRepo();
 const taskService = new TaskService(taskRepo);
 const taskController = new TaskController(taskService);
 
