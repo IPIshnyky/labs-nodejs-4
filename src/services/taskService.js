@@ -119,6 +119,25 @@ export class TaskService {
     return updated;
   }
 
+  async rescheduleOverdueTasks(maxPerDay, windowDays) {
+    const maxPerDayInt = parseInt(maxPerDay, 10);
+    const windowDaysInt = parseInt(windowDays, 10);
+
+    if (!Number.isInteger(maxPerDayInt) || maxPerDayInt < 1) {
+      const err = new Error("Max tasks per day must be a positive integer");
+      err.status = 400;
+      throw err;
+    }
+
+    if (!Number.isInteger(windowDaysInt) || windowDaysInt < 1) {
+      const err = new Error("Window days must be a positive integer");
+      err.status = 400;
+      throw err;
+    }
+
+    return this.#repo.rescheduleOverdue(maxPerDayInt, windowDaysInt);
+  }
+
   removeTask(id) {
     const result = this.#repo.delete(id);
 

@@ -25,7 +25,9 @@ app.set("views", path.join(import.meta.dirname, "src/views"));
 app.get("/", taskController.getDashboard);
 
 app.get("/tasks/new", taskController.renderCreateForm);
+app.get("/tasks/reschedule-overdue", taskController.renderRescheduleForm);
 app.post("/tasks", taskController.submitNewTask);
+app.post("/tasks/reschedule-overdue", taskController.submitReschedule);
 app.get("/tasks/:id/edit", taskController.renderEditForm);
 app.post("/tasks/:id/update", taskController.submitUpdate);
 app.post("/tasks/:id/toggle", taskController.toggleTaskStatus);
