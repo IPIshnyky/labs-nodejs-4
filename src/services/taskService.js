@@ -119,23 +119,23 @@ export class TaskService {
     return updated;
   }
 
-  async rescheduleOverdueTasks(newDate) {
-    if (
-      !/^\d{4}-\d{2}-\d{2}$/.test(newDate) ||
-      Number.isNaN(Date.parse(newDate))
-    ) {
-      const err = new Error("Date must be in YYYY-MM-DD format");
+  async rescheduleOverdueTasks(maxPerDay, windowDays) {
+    const maxPerDayInt = parseInt(maxPerDay, 10);
+    const windowDaysInt = parseInt(windowDays, 10);
+
+    if (!Number.isInteger(maxPerDayInt) || maxPerDayInt < 1) {
+      const err = new Error("Max tasks per day must be a positive integer");
       err.status = 400;
       throw err;
     }
 
-    if (new Date(newDate) < new Date()) {
-      const err = new Error("New date must be in the future");
+    if (!Number.isInteger(windowDaysInt) || windowDaysInt < 1) {
+      const err = new Error("Window days must be a positive integer");
       err.status = 400;
       throw err;
     }
 
-    return this.#repo.rescheduleOverdue(newDate);
+    return this.#repo.rescheduleOverdue(maxPerDayInt, windowDaysInt);
   }
 
   removeTask(id) {

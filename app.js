@@ -25,20 +25,13 @@ app.set("views", path.join(import.meta.dirname, "src/views"));
 app.get("/", taskController.getDashboard);
 
 app.get("/tasks/new", taskController.renderCreateForm);
+app.get("/tasks/reschedule-overdue", taskController.renderRescheduleForm);
 app.post("/tasks", taskController.submitNewTask);
+app.post("/tasks/reschedule-overdue", taskController.submitReschedule);
 app.get("/tasks/:id/edit", taskController.renderEditForm);
 app.post("/tasks/:id/update", taskController.submitUpdate);
 app.post("/tasks/:id/toggle", taskController.toggleTaskStatus);
 app.post("/tasks/:id/delete", taskController.deleteTask);
-
-app.post("/tasks/reschedule-overdue", async (req, res, next) => {
-  try {
-    const updated = await taskService.rescheduleOverdueTasks(req.body.date);
-    res.json({ rescheduled: updated.length, tasks: updated });
-  } catch (error) {
-    next(error);
-  }
-});
 
 app.use((_req, res) => {
   res.status(404).sendFile(path.join(import.meta.dirname, "public/404.html"));

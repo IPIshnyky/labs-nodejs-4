@@ -13,7 +13,6 @@
     "migrate:down": "node scripts/migrate.js down",
     "migrate:refresh": "node scripts/migrate.js refresh",
     "seed": "node scripts/seed.js",
-    "demo:transaction": "node scripts/demo-transaction.js",
     "ci": "npm run migrate:up && npm run seed && npm test"
   },
   "repository": {

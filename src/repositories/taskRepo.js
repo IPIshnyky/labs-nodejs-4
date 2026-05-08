@@ -126,7 +126,7 @@ export class TaskRepo {
     }
   }
 
-  async rescheduleOverdue(newDate) {
+  async rescheduleOverdue(maxPerDay = 3, windowDays = 14) {
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
@@ -134,7 +134,8 @@ export class TaskRepo {
       const overdue = await client.query(
         `SELECT id, title, due_date, priority, is_done, created_at
          FROM tasks
-         WHERE due_date < CURRENT_DATE AND is_done = false`,
+         WHERE due_date < CURRENT_DATE AND is_done = false
+         ORDER BY priority DESC, due_date ASC`,
       );
 
       if (overdue.rows.length === 0) {
@@ -142,19 +143,55 @@ export class TaskRepo {
         return [];
       }
 
+      // Snapshot of how many tasks are already filling each future day.
+      const existing = await client.query(
+        `SELECT due_date::date AS day, COUNT(*)::int AS count
+         FROM tasks
+         WHERE due_date >= CURRENT_DATE
+           AND due_date < CURRENT_DATE + $1::int
+           AND is_done = false
+         GROUP BY due_date::date`,
+        [windowDays],
+      );
+
+      const slotMap = new Map(
+        existing.rows.map((r) => [r.day.toISOString().split("T")[0], r.count]),
+      );
+
       const updated = [];
       for (const row of overdue.rows) {
+        // Find the nearest future day within the window that still has capacity.
+        // Each placement updates slotMap so subsequent tasks see accurate counts.
+        let targetDate = null;
+        for (let d = 1; d <= windowDays; d++) {
+          const candidate = new Date();
+          candidate.setDate(candidate.getDate() + d);
+          const key = candidate.toISOString().split("T")[0];
+          if ((slotMap.get(key) ?? 0) < maxPerDay) {
+            targetDate = key;
+            slotMap.set(key, (slotMap.get(key) ?? 0) + 1);
+            break;
+          }
+        }
+
+        // Business logic abort: backlog exceeds planning capacity.
+        // The throw triggers ROLLBACK, undoing every placement made so far.
+        if (!targetDate) {
+          const err = new Error(
+            `Capacity exceeded: cannot fit all ${overdue.rows.length} overdue tasks ` +
+              `within ${windowDays} days at ${maxPerDay} tasks/day. No tasks were rescheduled.`,
+          );
+          err.status = 422;
+          throw err;
+        }
+
         const result = await client.query(
           `UPDATE tasks
-           SET due_date = $1, priority = 3
+           SET due_date = $1, priority = LEAST(priority + 1, 3)
            WHERE id = $2
            RETURNING id, title, due_date, priority, is_done, created_at`,
-          [newDate, row.id],
+          [targetDate, row.id],
         );
-
-        if (result.rows.length === 0) {
-          throw new Error(`Task #${row.id} was deleted during reschedule`);
-        }
 
         updated.push(this.#mapRowToTask(result.rows[0]));
       }

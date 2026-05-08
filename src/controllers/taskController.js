@@ -77,6 +77,35 @@ export class TaskController {
     }
   };
 
+  renderRescheduleForm = (_req, res) => {
+    res.render("reschedule", {
+      page: "reschedule",
+      error: null,
+      values: { maxPerDay: 3, windowDays: 14 },
+    });
+  };
+
+  submitReschedule = async (req, res, next) => {
+    const { maxPerDay, windowDays } = req.body;
+    try {
+      await this.#service.rescheduleOverdueTasks(maxPerDay, windowDays);
+      res.redirect(303, "/");
+    } catch (error) {
+      if (error.status && error.status < 500) {
+        res.render("reschedule", {
+          page: "reschedule",
+          error: error.message,
+          values: {
+            maxPerDay: maxPerDay ?? 3,
+            windowDays: windowDays ?? 14,
+          },
+        });
+      } else {
+        next(error);
+      }
+    }
+  };
+
   deleteTask = (req, res, next) => {
     try {
       this.#service.removeTask(req.params.id);
