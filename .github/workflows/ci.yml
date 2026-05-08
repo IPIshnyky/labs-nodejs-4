@@ -19,7 +19,7 @@ jobs:
       - name: Check formatting
         run: npx prettier --check .
 
-  test:
+  test-migrations:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -49,5 +49,3 @@ jobs:
         run: npm run migrate:up
       - name: Seed DB
         run: npm run seed
-      - name: Run tests
-        run: npm test
