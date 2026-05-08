@@ -1,30 +1,17 @@
 import fs from "fs";
+import path from "path";
 import pool from "../src/db/index.js";
 import { handleFatalError } from "./helpers.js";
 
-const priorityMap = { high: 3, medium: 2, low: 1 };
+const seedSqlPath = path.resolve("scripts", "seed.sql");
 
-fs.readFile("./data/tasks.json", "utf8", (err, content) => {
+fs.readFile(seedSqlPath, "utf8", (err, sql) => {
   if (err) handleFatalError("Failed to read file:")(err);
-  const data = JSON.parse(content);
 
-  const seed = (index) => {
-    if (index === data.length) {
-      return pool
-        .end()
-        .catch(handleFatalError("Fatal error closing the database pool:"));
-    }
-
-    const t = data[index];
-    const sql =
-      "INSERT INTO tasks (title, due_date, priority, is_done) VALUES ($1, $2, $3, $4)";
-    const values = [t.title, t.date, priorityMap[t.priority] || 1, t.completed];
-
-    pool.query(sql, values, (err) => {
-      if (err) handleFatalError("Failed to insert task:")(err);
-      seed(index + 1);
-    });
-  };
-
-  seed(0);
+  pool.query(sql, (err) => {
+    if (err) handleFatalError("Failed to execute seed:")(err);
+    pool
+      .end()
+      .catch(handleFatalError("Fatal error closing the database pool:"));
+  });
 });

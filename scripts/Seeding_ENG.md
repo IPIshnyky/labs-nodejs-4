@@ -15,8 +15,7 @@ To populate the database using a specific method, run the corresponding command:
 
 ### How it Works
 
-- **Data Source:** Records are parsed from `data/tasks.json`.
-- **Data Mapping:** Priority strings ("high", "medium", "low") are automatically mapped to integers (3, 2, 1) to match the database schema.
+- **Data Source:** Records are read from `scripts/seed.sql` and executed as a single SQL statement.
 - **Database Client:** All scripts import a shared `pool` instance from `src/db/index.js` and connect via the `DATABASE_URL` environment variable.
 - **Consistency:** Regardless of the execution pattern, all scripts populate the database with the exact same dataset.
 
@@ -24,7 +23,7 @@ To populate the database using a specific method, run the corresponding command:
 
 - **Cleanup:** Before re-testing scripts, use the following command to wipe data and reset ID counters:
   `TRUNCATE tasks RESTART IDENTITY;`
-- **Auto-increment:** The `id` field is excluded from the JSON data as PostgreSQL handles it automatically via the `SERIAL` primary key.
+- **Auto-increment:** The `id` field is omitted from the INSERT statements; PostgreSQL handles it automatically via the `SERIAL` primary key.
 
 ### Implementation Notes
 
