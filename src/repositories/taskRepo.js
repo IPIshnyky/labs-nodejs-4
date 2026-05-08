@@ -126,6 +126,49 @@ export class TaskRepo {
     }
   }
 
+  async rescheduleOverdue(newDate) {
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+
+      const overdue = await client.query(
+        `SELECT id, title, due_date, priority, is_done, created_at
+         FROM tasks
+         WHERE due_date < CURRENT_DATE AND is_done = false`,
+      );
+
+      if (overdue.rows.length === 0) {
+        await client.query("COMMIT");
+        return [];
+      }
+
+      const updated = [];
+      for (const row of overdue.rows) {
+        const result = await client.query(
+          `UPDATE tasks
+           SET due_date = $1, priority = 3
+           WHERE id = $2
+           RETURNING id, title, due_date, priority, is_done, created_at`,
+          [newDate, row.id],
+        );
+
+        if (result.rows.length === 0) {
+          throw new Error(`Task #${row.id} was deleted during reschedule`);
+        }
+
+        updated.push(this.#mapRowToTask(result.rows[0]));
+      }
+
+      await client.query("COMMIT");
+      return updated;
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
   async delete(id) {
     const client = await pool.connect();
     try {

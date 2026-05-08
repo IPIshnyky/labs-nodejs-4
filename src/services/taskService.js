@@ -119,6 +119,25 @@ export class TaskService {
     return updated;
   }
 
+  async rescheduleOverdueTasks(newDate) {
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(newDate) ||
+      Number.isNaN(Date.parse(newDate))
+    ) {
+      const err = new Error("Date must be in YYYY-MM-DD format");
+      err.status = 400;
+      throw err;
+    }
+
+    if (new Date(newDate) < new Date()) {
+      const err = new Error("New date must be in the future");
+      err.status = 400;
+      throw err;
+    }
+
+    return this.#repo.rescheduleOverdue(newDate);
+  }
+
   removeTask(id) {
     const result = this.#repo.delete(id);
 

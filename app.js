@@ -31,6 +31,15 @@ app.post("/tasks/:id/update", taskController.submitUpdate);
 app.post("/tasks/:id/toggle", taskController.toggleTaskStatus);
 app.post("/tasks/:id/delete", taskController.deleteTask);
 
+app.post("/tasks/reschedule-overdue", async (req, res, next) => {
+  try {
+    const updated = await taskService.rescheduleOverdueTasks(req.body.date);
+    res.json({ rescheduled: updated.length, tasks: updated });
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.use((_req, res) => {
   res.status(404).sendFile(path.join(import.meta.dirname, "public/404.html"));
 });
