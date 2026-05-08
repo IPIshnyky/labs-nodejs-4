@@ -1,23 +1,26 @@
 [
   {
-    "id": "1",
-    "title": "Complete Node.js lab assignment",
-    "date": "2026-03-25",
+    "title": "Finish Lab 4 Node.js",
+    "date": "2026-05-01",
     "priority": "high",
     "completed": false
   },
   {
-    "id": "2",
-    "title": "Review pull request for API endpoints",
-    "date": "2026-03-22",
+    "title": "Prepare for exams",
+    "date": "2026-05-15",
+    "priority": "high",
+    "completed": false
+  },
+  {
+    "title": "Buy groceries",
+    "date": "2026-04-30",
     "priority": "medium",
     "completed": false
   },
   {
-    "id": "4",
-    "title": "eat spinach",
-    "date": "2026-04-22",
+    "title": "Read documentation on PostgreSQL",
+    "date": "2026-04-29",
     "priority": "low",
-    "completed": false
+    "completed": true
   }
 ]
