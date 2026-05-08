@@ -1,9 +1,11 @@
 # Seeding & Async Patterns Documentation
 
 ### Overview
+
 This section of the project implements automated data seeding into the `tasks` table using four distinct asynchronous approaches in Node.js to demonstrate the evolution of the language's concurrency models.
 
 ### Local Usage (Commands)
+
 To populate the database using a specific method, run the corresponding command:
 
 - **Sync-style:** `node scripts/seed-sync.js`
@@ -12,15 +14,18 @@ To populate the database using a specific method, run the corresponding command:
 - **Async/Await:** `node scripts/seed-async.js`
 
 ### How it Works
+
 - **Data Source:** Records are parsed from `data/tasks.json`.
 - **Data Mapping:** Priority strings ("high", "medium", "low") are automatically mapped to integers (3, 2, 1) to match the database schema.
 - **Database Client:** All scripts import a shared `pool` instance from `src/db/index.js` and connect via the `DATABASE_URL` environment variable.
 - **Consistency:** Regardless of the execution pattern, all scripts populate the database with the exact same dataset.
 
 ### Database Maintenance
+
 - **Cleanup:** Before re-testing scripts, use the following command to wipe data and reset ID counters:
   `TRUNCATE tasks RESTART IDENTITY;`
 - **Auto-increment:** The `id` field is excluded from the JSON data as PostgreSQL handles it automatically via the `SERIAL` primary key.
 
 ### Implementation Notes
+
 Each script demonstrates a different way to handle asynchronous I/O in Node.js, from traditional callbacks and Promises to modern async/await syntax, ensuring the critirea for identical database population is met across all versions.
