@@ -151,3 +151,6 @@ vite.config.ts.timestamp-*
 
 # macOS cache
 .DS_Store
+
+# Act local settings
+.act
